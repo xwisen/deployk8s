@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-scheduler
+  namespace: system
+  labels:
+    app: kube-scheduler
+    enable: "true"
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-scheduler
+    image: reg.dnt:5000/google_containers/kube-scheduler:v1.4.0
+    command:
+    - /bin/sh
+    - -c
+    - /usr/local/bin/kube-scheduler --master=127.0.0.1:8080 --v=2 --leader-elect=true 1>>/var/log/kube-scheduler.log 2>&1
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 500m
+        memory: 512Mi
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 10251
+      initialDelaySeconds: 15
+      timeoutSeconds: 1
+    volumeMounts:
+    - mountPath: /var/log/kube-scheduler.log
+      name: logfile
+  volumes:
+  - hostPath:
+      path: /data/log/kube-scheduler.log
+    name: logfile

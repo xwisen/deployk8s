@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: etcd-server
+  namespace: system
+  labels:
+    app: etcd-server
+    enable: "true"
+spec:
+  hostNetwork: true
+  containers:
+  - image: reg.dnt:5000/coreos/etcd:v3.0.10
+    name: etcd-container
+    command:
+    - /bin/sh
+    - -c
+    - /usr/local/bin/etcd --name master1 --initial-advertise-peer-urls http://10.78.238.24:7001 --listen-peer-urls http://10.78.238.24:7001 --advertise-client-urls http://10.78.238.24:4001 --listen-client-urls http://0.0.0.0:4001 --data-dir /var/etcd/data --initial-cluster-token etcd123456 --initial-cluster-state new --initial-cluster master1=http://10.78.238.24:7001,master2=http://10.78.238.25:7001,master3=http://10.78.198.69:7001 1>>/var/log/etcd.log 2>&1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2048Mi
+      requests:
+        cpu: 500m
+        memory: 1024Mi
+    livenessProbe:
+      httpGet:
+        path: /version
+        port: 4001
+      initialDelaySeconds: 30
+      timeoutSeconds: 30
+    volumeMounts:
+    - mountPath: /var/etcd
+      name: varetcd
+    - mountPath: /etc/ssl
+      name: etcssl
+      readOnly: true
+    - mountPath: /usr/share/ssl
+      name: usrsharessl
+      readOnly: true
+    - mountPath: /var/ssl
+      name: varssl
+      readOnly: true
+    - mountPath: /usr/ssl
+      name: usrssl
+      readOnly: true
+    - mountPath: /usr/lib/ssl
+      name: usrlibssl
+      readOnly: true
+    - mountPath: /usr/local/openssl
+      name: usrlocalopenssl
+      readOnly: true
+    - mountPath: /etc/openssl
+      name: etcopenssl
+      readOnly: true
+    - mountPath: /etc/pki/tls
+      name: etcpkitls
+      readOnly: true
+    - mountPath: /var/log/etcd.log
+      name: logfile
+  volumes:
+  - hostPath:
+      path: /data/etcd/data
+    name: varetcd
+  - hostPath:
+      path: /etc/ssl
+    name: etcssl
+  - hostPath:
+      path: /usr/share/ssl
+    name: usrsharessl
+  - hostPath:
+      path: /var/ssl
+    name: varssl
+  - hostPath:
+      path: /usr/ssl
+    name: usrssl
+  - hostPath:
+      path: /usr/lib/ssl
+    name: usrlibssl
+  - hostPath:
+      path: /usr/local/openssl
+    name: usrlocalopenssl
+  - hostPath:
+      path: /etc/openssl
+    name: etcopenssl
+  - hostPath:
+      path: /etc/pki/tls
+    name: etcpkitls
+  - hostPath:
+      path: /data/log/etcd.log
+    name: logfile

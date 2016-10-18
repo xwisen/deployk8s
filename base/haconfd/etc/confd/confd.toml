@@ -1,0 +1,10 @@
+backend = "etcd"
+confdir = "/etc/confd"
+debug = true
+interval = 10
+nodes = [
+  "http://10.78.198.74:14001",
+]
+watch = true
+quiet = true
+verbose = true

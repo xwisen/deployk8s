@@ -1,0 +1,62 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "name": "k8s-flannel",
+	"namespace":"system"
+    },
+    "spec": {
+        "containers": [
+            {
+                "command": [
+                    "/opt/bin/flanneld",
+                    "--ip-masq=true",
+                    "--iface=ens32",
+                    "--etcd-endpoints=http://20.26.2.110:4001",
+		    "--etcd-prefix=/kubernetes/network",
+		    "--logtostderr=true",
+		    "-v=6"
+                ],
+                "image": "reg.dnt:5000/conductor/flannel:0.5.5",
+                "name": "flannel",
+                "securityContext": {
+                    "privileged": true
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/dev/net",
+                        "name": "devnet"
+                    }
+                ]
+            },
+            {
+                "command": [
+                    "/setup_flannel_network.sh"
+                ],
+                "image": "reg.dnt:5000/conductor/kubernetes:2.2.0",
+                "name": "setup-flannel",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/setup_flannel_network.sh",
+                        "name": "setup"
+                    }
+                ]
+            }
+        ],
+        "hostNetwork": true,
+        "volumes": [
+            {
+                "hostPath": {
+                    "path": "/dev/net"
+                },
+                "name": "devnet"
+            },
+            {
+                "hostPath": {
+                    "path": "/etc/kubernetes/scripts/setup_flannel_network.sh"
+                },
+                "name": "setup"
+            }
+        ]
+    }
+}

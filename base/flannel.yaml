@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: flannel-server
+  namespace: system
+  labels:
+    app: flannel-server
+    enable: "true"
+spec:
+  hostNetwork: true
+  containers: 
+  - name: flannel-server
+    image: reg.dnt:5000/coreos/flannel:v0.6.2
+    command:
+    - /bin/sh
+    - -c
+    - /opt/bin/flanneld -v 6 --logtostderr -ip-masq -etcd-endpoints http://127.0.0.1:4001 -etcd-prefix /kubernetes/network 1>>/var/log/flannel.log 2>&1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2048Mi
+      requests:
+        cpu: 500m
+        memory: 1024Mi
+    volumeMounts:
+    - mountPath: /var/log/flannel.log
+      name: logfile
+    - mountPath: /run/flannel
+      name: flannelenv
+    - mountPath: /dev/net
+      name: flannelnet
+    securityContext:
+      privileged: true
+  volumes:
+  - hostPath:
+      path: /data/log/flannel.log
+    name: logfile
+  - hostPath:
+      path: /run/flannel
+    name: flannelenv
+  - hostPath:
+      path: /dev/net
+    name: flannelnet
