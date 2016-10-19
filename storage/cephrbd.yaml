@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ceph-secret
+data:
+  key: QVFBTXh3WlkrdldBREJBQW92UE5jZGxFRlNhWG9tVWV2bU5sN0E9PQ==
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: tf-ceph
+  namespace: default
+spec:
+    capacity:
+        storage: 100Mi
+    accessModes:
+        - ReadWriteOnce
+    rbd:
+      monitors:
+      - 20.26.2.51:6789
+      - 20.26.2.53:6789
+      - 20.26.2.54:6789
+      user: admin
+      pool: rbd
+      image: tst
+      fsType: ext4,
+      secretRef:
+        name: ceph-secret
+      readOnly: true
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: tf-ceph
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi

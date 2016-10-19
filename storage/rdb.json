@@ -1,0 +1,40 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "name": "rbd"
+    },
+    "spec": {
+        "containers": [
+            {
+                "name": "rbd-rw",
+                "image": "reg.dnt:5000/kubernetes/pause:go",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/mnt/rbd",
+                        "name": "rbdpd"
+                    }
+                ]
+            }
+        ],
+        "volumes": [
+            {
+                "name": "rbdpd",
+                "rbd": {
+                    "monitors": [
+        						"20.26.2.51:6789",
+						        "20.26.2.53:6789",
+        						"20.26.2.54:6789"
+    				 ],
+                    "pool": "rbd",
+                    "image": "tst",
+                    "user": "client.admin",
+                    "keyring": "/etc/ceph/ceph.client.admin.keyring",
+                    "fsType": "ext4",
+                    "readOnly": true
+                }
+            }
+        ]
+    }
+}
+
