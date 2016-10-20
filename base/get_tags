@@ -1,0 +1,6 @@
+if [[ -z $1 ]];then
+	curl http://reg.dnt:5000/v2/_catalog | jq .
+else
+	curl http://reg.dnt:5000/v2/$1/tags/list | jq .tags
+fi
+
