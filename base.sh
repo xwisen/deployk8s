@@ -1,4 +1,15 @@
-echo "start create base env------------------------------"
+# SHELL 
+# ***********************************************
+# 
+#       Filename: base.sh
+# 
+#         Author: xwisen 1031649164@qq.com
+#    Description: ---
+#         Create: 2016-11-03 19:27:01
+#  Last Modified: 2016-11-03 19:27:01
+# ***********************************************
+
+
 #export http_proxy=http://proxy.zj.chinamobile.com:8080 && export https_proxy=http://proxy.zj.chinamobile.com:8080
 export http_proxy=http://10.78.238.24:8118 && export https_proxy=http://10.78.238.24:8118
 echo "0-------------------$http_proxy----$https_proxy"
