@@ -4,8 +4,9 @@ metadata:
   name: kube-controller-manager
   namespace: system
   labels:
-    app: kube-controller-manager
+    app: "kube-controller-manager"
     enable: "true"
+    service: "base"
 spec:
   containers:
   - command:
@@ -63,7 +64,7 @@ spec:
       path: /srv/kubernetes
     name: srvkube
   - hostPath:
-      path: /data/log/kube-controller-manager.log
+      path: /data/logs/base/kube-controller-manager.log
     name: logfile
   - hostPath:
       path: /etc/ssl

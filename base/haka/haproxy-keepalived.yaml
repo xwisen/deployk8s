@@ -4,8 +4,9 @@ metadata:
   name: haproxy-keepalived
   namespace: system
   labels: 
-    app: haproxy-keepalived
+    app: "haproxy-keepalived"
     enable: "true"
+    service: "base"
 spec:
   hostNetwork: true
   securityContext:
@@ -18,7 +19,7 @@ spec:
     - -p 
     - /run/haproxy.pid
     - -f
-    - /usr/local/etc/haproxy/haproxy.cfg
+    - /etc/haproxy/haproxy.cfg
     - -d
     resources:
       limits:
@@ -27,15 +28,8 @@ spec:
       requests:
         cpu: 1000m
         memory: 2048Mi
-    ports:
-    - containerPort: 80 
-      hostPort: 80
-      name: http
-    - containerPort: 10080
-      hostPort: 10080
-      name: haproxy-stats
     volumeMounts:
-    - mountPath: /usr/local/etc/haproxy/haproxy.cfg
+    - mountPath: /etc/haproxy/haproxy.cfg
       name: haproxy-cfg
       readOnly: true
   - name: keepalived

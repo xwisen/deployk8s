@@ -4,7 +4,7 @@ metadata:
   name: flannel-server
   namespace: system
   labels:
-    app: flannel-server
+    app: "flannel-server"
     enable: "true"
     service: "base"
 spec:
@@ -15,7 +15,7 @@ spec:
     command:
     - /bin/sh
     - -c
-    - /opt/bin/flanneld --logtostderr -ip-masq -etcd-endpoints $ETCD_INFO -etcd-prefix /kubernetes/network 1>>/var/log/flannel.log 2>&1
+    - /opt/bin/flanneld --logtostderr -ip-masq -etcd-endpoints http://127.0.0.1:4001 -etcd-prefix /kubernetes/network 1>>/var/log/flannel.log 2>&1
     resources:
       limits:
         cpu: 1000m
@@ -23,9 +23,6 @@ spec:
       requests:
         cpu: 500m
         memory: 1024Mi
-    env:
-    - name: ETCD_INFO
-      value: "http://10.78.198.74:14001"
     volumeMounts:
     - mountPath: /var/log/flannel.log
       name: logfile

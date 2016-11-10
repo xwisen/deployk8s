@@ -4,8 +4,9 @@ metadata:
   name: etcd-server
   namespace: system
   labels:
-    app: etcd-server
+    app: "etcd-server"
     enable: "true"
+    service: "base"
 spec:
   hostNetwork: true
   containers:
@@ -14,7 +15,7 @@ spec:
     command:
     - /bin/sh
     - -c
-    - /usr/local/bin/etcd --name master1 --initial-advertise-peer-urls http://10.78.238.24:7001 --listen-peer-urls http://10.78.238.24:7001 --advertise-client-urls http://10.78.238.24:4001 --listen-client-urls http://0.0.0.0:4001 --data-dir /var/etcd/data --initial-cluster-token etcd123456 --initial-cluster-state new --initial-cluster master1=http://10.78.238.24:7001,master2=http://10.78.238.25:7001,master3=http://10.78.198.69:7001 1>>/var/log/etcd.log 2>&1
+    - /usr/local/bin/etcd --name $NAME --initial-advertise-peer-urls http://$ADDR:7001 --listen-peer-urls http://$ADDR:7001 --advertise-client-urls http://$ADDR:4001 --listen-client-urls http://0.0.0.0:4001 --data-dir /var/etcd/data --initial-cluster-token etcd123456 --initial-cluster-state new --initial-cluster master1=http://$MASTER1:7001,master2=http://$MASTER2:7001,master3=http://$MASTER3:7001 1>>/var/log/etcd.log 2>&1
     resources:
       limits:
         cpu: 1000m
@@ -28,6 +29,17 @@ spec:
         port: 4001
       initialDelaySeconds: 30
       timeoutSeconds: 30
+    env:
+    - name: NAME
+      value: master1
+    - name: ADDR
+      value: 10.78.238.24
+    - name: MASTER1
+      value: 10.78.238.24
+    - name: MASTER2
+      value: 10.78.238.25
+    - name: MASTER3
+      value: 10.78.198.69
     volumeMounts:
     - mountPath: /var/etcd
       name: varetcd
@@ -86,5 +98,5 @@ spec:
       path: /etc/pki/tls
     name: etcpkitls
   - hostPath:
-      path: /data/log/etcd.log
+      path: /data/logs/base/etcd.log
     name: logfile

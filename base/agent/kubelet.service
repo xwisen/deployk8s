@@ -2,9 +2,10 @@
 Description=Kubernetes Kubelet
 After=docker.service
 Requires=docker.service
+Environment="API_SERVER_INFO=http://10.78.198.74:18080"
 
 [Service]
-ExecStart=/usr/local/bin/kubelet --allow-privileged=true --v=6 --logtostderr=true --address=0.0.0.0 --port=10250 --cluster-dns=10.0.1.1 --cluster-domain=cluster.local --pod-infra-container-image=reg.dnt:5000/google_containers/pause:3.0 --api-servers=http://10.78.198.74:18080 --config=/data/kubernetes/manifests
+ExecStart=/usr/local/bin/kubelet --allow-privileged=true --logtostderr=true --address=0.0.0.0 --port=10250 --cluster-dns=10.0.1.1 --cluster-domain=cluster.local --pod-infra-container-image=reg.dnt:5000/google_containers/pause:3.0 --api-servers=$API_SERVER_INFO --config=/data/kubernetes/manifests
 Restart=on-failure
 KillMode=process
 

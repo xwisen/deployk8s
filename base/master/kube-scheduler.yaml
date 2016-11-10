@@ -4,8 +4,9 @@ metadata:
   name: kube-scheduler
   namespace: system
   labels:
-    app: kube-scheduler
+    app: "kube-scheduler"
     enable: "true"
+    service: "base"
 spec:
   hostNetwork: true
   containers:
@@ -14,7 +15,7 @@ spec:
     command:
     - /bin/sh
     - -c
-    - /usr/local/bin/kube-scheduler --master=127.0.0.1:8080 --v=2 --leader-elect=true 1>>/var/log/kube-scheduler.log 2>&1
+    - /usr/local/bin/kube-scheduler --master=127.0.0.1:8080 --leader-elect=true 1>>/var/log/kube-scheduler.log 2>&1
     resources:
       limits:
         cpu: 500m
@@ -33,5 +34,5 @@ spec:
       name: logfile
   volumes:
   - hostPath:
-      path: /data/log/kube-scheduler.log
+      path: /data/logs/base/kube-scheduler.log
     name: logfile

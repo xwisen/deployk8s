@@ -4,8 +4,9 @@ metadata:
   name: kube-apiserver
   namespace: system
   labels:
-    app: kube-apiserver
+    app: "kube-apiserver"
     enable: "true"
+    service: "base"
 spec:
   hostNetwork: true
   containers:
@@ -63,7 +64,7 @@ spec:
       path: /srv/kubernetes
     name: srvkube
   - hostPath:
-      path: /data/log/kube-apiserver.log
+      path: /data/logs/base/kube-apiserver.log
     name: logfile
   - hostPath:
       path: /etc/ssl

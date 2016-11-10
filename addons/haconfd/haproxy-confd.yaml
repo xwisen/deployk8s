@@ -18,13 +18,6 @@ spec:
       requests:
         cpu: 500m
         memory: 1024Mi
-    ports:
-    - containerPort: 80
-      hostPort: 80
-      name: app
-    - containerPort: 10082
-      hostPort: 10082
-      name: status
     env:
     - name: ETCD_HOST
       value: "10.78.198.74"

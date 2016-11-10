@@ -4,8 +4,9 @@ metadata:
   name: kube-proxy
   namespace: system
   labels:
-    app: kube-proxy
+    app: "kube-proxy"
     enable: "true"
+    service: "base"
 spec:
   hostNetwork: true
   containers:
@@ -14,7 +15,7 @@ spec:
     command:
     - /bin/sh
     - -c
-    - /usr/local/bin/kube-proxy --master=http://10.78.198.74:18080 --proxy-mode=iptables 1>>/var/log/kube-proxy.log 2>&1
+    - /usr/local/bin/kube-proxy --master=$ETCD_INFO --proxy-mode=iptables 1>>/var/log/kube-proxy.log 2>&1
     securityContext:
       privileged: true
     resources:
@@ -24,10 +25,13 @@ spec:
       requests:
         cpu: 500m
         memory: 1024Mi
+    env:
+    - name: ETCD_INFO
+      value: "http://10.78.198.74:18080" 
     volumeMounts:
     - mountPath: /var/log/kube-proxy.log
       name: logfile
   volumes:
   - hostPath:
-      path: /data/log/kube-proxy.log
+      path: /data/logs/base/kube-proxy.log
     name: logfile
