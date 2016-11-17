@@ -1,0 +1,6 @@
+for log in `ls /data/log/*.log`;
+do 
+	tail -c 100m $log > $log.tmp;
+	cat $log.tmp > $log;
+	rm -rf $log.tmp
+done
