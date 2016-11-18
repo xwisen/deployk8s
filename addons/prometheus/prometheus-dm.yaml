@@ -31,26 +31,17 @@ spec:
           name: config-volume
         resources:
           requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
             cpu: 500m
-            memory: 2500Mi
-      - image: reg.dnt:5000/grafana/grafana:3.1.0
-        name: grafana
-        ports:
-        - containerPort: 3000
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
+            memory: 1024Mi
           limits:
-            cpu: 500m
-            memory: 2500Mi
+            cpu: 1000m
+            memory: 2048Mi
+      nodeSelector:
+        kubernetes.io/hostname: wz-agent3
       volumes:
-      - hostPath:
-          path: /prometheus-data
-        name: data
+      - name: data
+        persistentVolumeClaim:
+                claimName: prometheus-storage
       - configMap:
           name: prometheus-config
         name: config-volume

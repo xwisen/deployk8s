@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: heapster-v1.2.0
+  namespace: kube-system
+  labels:
+    k8s-app: heapster
+    kubernetes.io/cluster-service: "true"
+    version: v1.2.0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: heapster
+      version: v1.2.0
+  template:
+    metadata:
+      labels:
+        k8s-app: heapster
+        version: v1.2.0
+    spec:
+      containers:
+        - image: reg.dnt:5000/google_containers/heapster:v1.2.0
+          name: heapster
+          resources:
+            # keep request = limit to keep this container in guaranteed class
+            limits:
+              cpu: 250m
+              memory: 500Mi
+            requests:
+              cpu: 500m
+              memory: 1000Mi
+          command:
+            - /heapster
+            - --source=kubernetes:http://20.26.2.110:18080?insecure=true&inClusterConfig=false&useServiceAccount=false&auth=
+            - --sink=log
+        - image: reg.dnt:5000/google_containers/heapster:v1.2.0
+          name: eventer
+          resources:
+            # keep request = limit to keep this container in guaranteed class
+            limits:
+              cpu: 250m
+              memory: 500Mi
+            requests:
+              cpu: 500m
+              memory: 1000Mi
+          command:
+            - /eventer
+            - --source=kubernetes:http://20.26.2.110:18080?insecure=true&inClusterConfig=false&useServiceAccount=false&auth=
+            - --sink=log

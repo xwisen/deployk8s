@@ -10,7 +10,3 @@ spec:
   ports:
   - port: 80
     targetPort: 9090 
-    name: prometheus
-  - port: 3000
-    targetPort: 3000
-    name: grafana

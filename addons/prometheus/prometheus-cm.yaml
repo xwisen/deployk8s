@@ -48,15 +48,11 @@ data:
         # scheme defaults to 'http'.
 
         static_configs:
-          - targets: ['10.78.238.24:4194','10.78.238.25:4194','10.78.198.69:4194']
+          - targets: ['20.26.2.51:4194','20.26.2.52:4194','20.26.2.53:4194']
             labels:
               group: 'k8s-master'
               namespace: 'system'
-          - targets: ['10.78.238.26:4194','10.78.238.27:4194','10.78.198.72:4194']
+          - targets: ['20.26.2.54:4194','20.26.20.156:4194','20.26.20.157:4194']
             labels:
               group: 'k8s-agent'
-              namespace: 'system'
-          - targets: ['10.78.198.70:4194','10.78.198.71:4194']
-            labels:
-              group: 'k8s-ha'
               namespace: 'system'

@@ -25,11 +25,11 @@ spec:
           resources:
             # keep request = limit to keep this container in guaranteed class
             limits:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 1000m
+              memory: 1024Mi
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 1000m
+              memory: 1024Mi
           ports: 
             - containerPort: 8083
             - containerPort: 8086
@@ -42,11 +42,11 @@ spec:
           resources:
             # keep request = limit to keep this container in guaranteed class
             limits:
-              cpu:  100m
-              memory: 256Mi
+              cpu:  1000m
+              memory: 1024Mi
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 1000m
+              memory: 1024Mi
           env:
             # This variable is required to setup templates in Grafana.
             - name: INFLUXDB_SERVICE_URL
@@ -68,6 +68,8 @@ spec:
             mountPath: /var
       volumes:
       - name: influxdb-persistent-storage
-        emptyDir: {}
+        hostPath: 
+          path: /heapster-influxdb
       - name: grafana-persistent-storage
-        emptyDir: {}
+        hostPath:
+          path: /heapster-grafana

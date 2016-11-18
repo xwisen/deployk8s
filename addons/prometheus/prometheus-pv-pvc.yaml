@@ -1,0 +1,39 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: prometheus-storage
+  namespace: kube-system
+  labels: 
+    name: prometheus-storage
+spec:
+    capacity:
+        storage: 600Mi
+    accessModes:
+        - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Retain
+    rbd:
+      monitors:
+      - 20.26.28.13:6789
+      - 20.26.28.14:6789
+      - 20.26.28.15:6789
+      user: admin
+      pool: k8s
+      image: prometheus-storage
+      fsType: ext4
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: prometheus-storage
+  namespace: kube-system
+  labels: 
+    name: prometheus-storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 300Mi
+  selector:
+    matchLabels:
+      name: "prometheus-storage"
