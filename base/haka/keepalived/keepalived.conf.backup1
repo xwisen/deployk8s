@@ -1,0 +1,29 @@
+ vrrp_script chk_haproxy {
+        script "/etc/keepalived/health.sh"    #服务探测，返回0说明服务是正常的
+        interval 1    #每隔1秒探测一次
+        weight 2      #haproxy上线，权重加2；下线，权重减2
+}
+#
+vrrp_instance VI_1 {        #双主实例1
+    state BACKUP            #ha1（172.16.7.10）为主，ha2（172.16.7.100）为备
+    interface ens32
+    virtual_router_id 100    #实例1的VRID为88
+    garp_master_delay 1
+    priority 99            #主（172.16.7.10）的优先级为100，从的（172.16.7.100）优先级为99
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 123456
+    }
+#
+    virtual_ipaddress {
+        20.26.2.110/24 dev ens32    #实例1的VIP
+    }
+    track_interface {
+        ens32
+    }
+#
+    track_script {        #脚本追踪
+        chk_haproxy
+    }
+}
