@@ -68,7 +68,7 @@ frontend http-in
 backend {{$data.metadata.name}}-{{$port.port}}
     balance leastconn 
 								{{range $address := $subset.addresses}}
-    server {{$data.metadata.name}}-{{$port.protocol}}-{{$address.ip}}-{{$port.port}} {{$address.ip}}:{{$port.port}} check inter 30000
+    server {{$data.metadata.name}}-{{$port.protocol}}-{{$port.protocol}}-{{$address.ip}}-{{$port.port}} {{$address.ip}}:{{$port.port}} check inter 30000
 								{{end}}
 							{{end}}
 						{{end}}

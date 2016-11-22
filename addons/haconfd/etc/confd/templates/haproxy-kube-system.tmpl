@@ -26,7 +26,7 @@ defaults
     errorfile 504 /etc/haproxy/errors/504.http
 
 frontend http-stats
-        bind *:10080
+        bind *:10081
         mode http
         stats enable
         stats realm DCOS\ Haproxy
@@ -37,12 +37,15 @@ frontend http-in
 #-------------------frontend acl list
 {{range $svcs := ls "/registry/services/endpoints/kube-system"}}{{$svc := printf "/registry/services/endpoints/kube-system/%s" $svcs }} {{if $svc}}{{range $spec := getvs $svc}}{{ $data := json $spec }}{{range $subset := $data.subsets}}{{if printf "%s" $subset}}{{range $port := $subset.ports}}{{if printf "%s" $port}}{{if eq $port.protocol "TCP" "HTTP"}}
     # {{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}}
-    acl {{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}} path_beg -i {{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}}
-    use_backend {{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}} if {{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}
+    	acl ::{{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}}-aclrule hdr(Host) -i {{$data.metadata.name}}.reg.dnt
+    	use_backend ::{{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}} if ::{{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}}-aclrule {{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}
 
 #-------------------bankend app list
 {{range $svcs := ls "/registry/services/endpoints/kube-system"}}{{$svc := printf "/registry/services/endpoints/kube-system/%s" $svcs }}{{if $svc}}{{range $spec := getvs $svc}}{{ $data := json $spec }}{{range $subset := $data.subsets}}{{if printf "%s" $subset}}{{range $port := $subset.ports}}{{if printf "%s" $port}}{{if eq $port.protocol "TCP" "HTTP"}}
 # {{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}}
-backend {{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}}
-    balance source {{range $address := $subset.addresses}}
-    server {{$data.metadata.name}}-{{$port.protocol}}-{{$address.ip}}-{{$port.port}} {{$address.ip}}:{{$port.port}} weight 2 check inter 30000{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}
+backend ::{{$data.metadata.name}}-{{$port.protocol}}-{{$port.port}}
+	option accept-invalid-http-request
+	option accept-invalid-http-response {{range $address := $subset.addresses}}
+	cookie SESSION_COOKIE insert indirect nocache httponly secure
+	#reqrep ^([^\ :]*)\ /{{$data.metadata.name}}     \1\2
+    	server ::{{$data.metadata.name}}-{{$port.protocol}}-{{$address.ip}}-{{$port.port}} {{$address.ip}}:{{$port.port}} cookie {{$address.ip}}:{{$port.port}} weight 2 check inter 30000 fall 3{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}{{end}}
