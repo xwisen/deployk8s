@@ -8,10 +8,11 @@ Type=notify
 # the default is not to use systemd for cgroups because the delegate issues still
 # exists and systemd currently does not support the cgroup feature set required
 # for containers run by docker
-#Environment="http_proxy=http://192.168.1.106:8118"
+Environment="HTTP_PROXY=http://proxy.zj.chinamobile.com:8080" "HTTPS_PROXY=http://proxy.zj.chinamobile.com:8080" "NO_PROXY=localhost,127.0.0.1,reg.dnt"
+#Environment="HTTP_PROXY=http://192.168.1.106:8118" "HTTPS_PROXY=http://192.168.1.106:8118" "NO_PROXY=localhost,127.0.0.1,reg.dnt"
 #Environment="https_proxy=http://192.168.1.106:8118"
 EnvironmentFile=-/etc/default/docker
-ExecStart=/usr/bin/dockerd --graph=/var/lib/docker --insecure-registry 0.0.0.0/0 -H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock --log-driver=json-file --log-opt max-size=1g --log-opt max-file=1 $DOCKER_OPTS
+ExecStart=/usr/bin/dockerd --graph=/data/docker --insecure-registry 0.0.0.0/0 -H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock --log-driver=json-file --log-opt max-size=1g --log-opt max-file=1 $DOCKER_OPTS
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=on-failure
 # Having non-zero Limit*s causes performance problems due to accounting overhead
