@@ -9,6 +9,8 @@
 #  Last Modified: 2016-11-25 10:24:04
 # ***********************************************
 
+#eg: regc_search
+#eg: regc_search nginx
 function regc_search() {
 	REG_INFO=${REG_INFO:-reg.dnt:5000}
 	if [[ -z $1 ]];then
@@ -48,6 +50,8 @@ for tag in tags:
 '
 	fi
 }
+
+#eg: regc_del reg.dnt:5000/nginx:1.9
 function regc_del() {
 	REG_INFO=${REG_INFO:-reg.dnt:5000}
 	if [[ $# -ne 1  ]];then
@@ -74,4 +78,13 @@ except urllib2.HTTPError as e:
 print(str(resp.read()))
 #print(json.loads(resp.read()))
 '
+}
+
+#eg: yamltojson test.yaml test.json
+function yamltojson () {
+	python -c '
+import sys, yaml, json;
+json.dump(yaml.load(sys.stdin), sys.stdout, indent=4)
+'
+< $1 > $2
 }
