@@ -88,3 +88,12 @@ json.dump(yaml.load(sys.stdin), sys.stdout, indent=4)
 '
 < $1 > $2
 }
+
+#eg: jsontoyaml test.json test.yaml
+function yamltojson () {
+	python -c '
+import sys, yaml, json;
+yaml.dump(json.load(sys.stdin), sys.stdout, indent=4)
+'
+< $1 > $2
+}
