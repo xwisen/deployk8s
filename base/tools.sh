@@ -48,8 +48,11 @@ except urllib2.HTTPError as e:
 	print(e)
 	exit(1)
 tags=json.loads(resp.read())["tags"]
-for tag in tags:
-	print("'${REG_INFO}'"+"/"+"'${REPO}'"+":"+tag)
+if tags:
+	for tag in tags:
+		print("'${REG_INFO}'"+"/"+repo+":"+tag)
+else:
+	print("'${REG_INFO}'"+"/"+repo+":"+"deleted")
 '
 	fi
 }
@@ -59,16 +62,16 @@ function regc_del() {
 	REG_INFO=${REG_INFO:-reg.dnt:5000}
 	if [[ $# -ne 1  ]];then
 		echo "Example: "
-		echo "regc_del ${REG_HOST}:5000/nginx:1.9"
+		echo "regc_del ${REG_INFO}/nginx:1.9"
 		return 1
 	fi
 	#echo "image need delete is : $1"
 	reg_info=`echo $1 | cut -d "/" -f 1`
 	image_name=`echo $1 | cut -d "/" -f 2- | cut -d ":" -f 1`
 	tag_name=`echo $1 | cut -d "/" -f 2- | cut -d ":" -f 2`
-	echo "reg info is : $reg_info"
-	echo "image name is : $image_name"
-	echo "tag name is : $tag_name"
+	#echo "reg info is : $reg_info"
+	#echo "image name is : $image_name"
+	#echo "tag name is : $tag_name"
 	python -c '
 import urllib2,json
 try:
@@ -89,7 +92,8 @@ try:
 except urllib2.HTTPError as e:
 	print(e)
 	exit(1)
-print(str(resp.read()))
+print("delete image : "+"'${1}'" + " succeed !")
+#print(str(resp.read()))
 # other useful note
 #print(resp.info()["Docker-Content-Digest"])
 #headers=resp.info()
