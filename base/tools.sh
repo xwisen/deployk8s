@@ -31,8 +31,11 @@ for repo in repos:
 		print(e)
 		exit(1)
 	tags=json.loads(resp.read())["tags"]
-	for tag in tags:
-		print("'${REG_INFO}'"+"/"+repo+":"+tag)
+	if tags:
+		for tag in tags:
+			print("'${REG_INFO}'"+"/"+repo+":"+tag)
+	else:
+		print("'${REG_INFO}'"+"/"+repo+":"+"deleted")
 '
 	else
 		#curl http://${REG_HOST}:5000/v2/$1/tags/list | jq .tags
@@ -70,12 +73,27 @@ function regc_del() {
 import urllib2,json
 try:
 	req=urllib2.Request("http://"+"'${reg_info}'"+"/v2/"+"'${image_name}'"+"/manifests/"+"'${tag_name}'")
+	req.add_header("Accept","application/vnd.docker.distribution.manifest.v2+json")
 	req.get_method=lambda: "GET"
 	resp=urllib2.urlopen(req)
 except urllib2.HTTPError as e:
 	print(e)
 	exit(1)
+#print(str(resp.read()))
+try:
+	digest=resp.info()["Docker-Content-Digest"]
+	req=urllib2.Request("http://"+"'${reg_info}'"+"/v2/"+"'${image_name}'"+"/manifests/"+digest)
+	req.add_header("Accept","application/vnd.docker.distribution.manifest.v2+json")
+	req.get_method=lambda: "DELETE"
+	resp=urllib2.urlopen(req)
+except urllib2.HTTPError as e:
+	print(e)
+	exit(1)
 print(str(resp.read()))
+# other useful note
+#print(resp.info()["Docker-Content-Digest"])
+#headers=resp.info()
+#print(headers.getheaders("Docker-Content-Digest"))
 #print(json.loads(resp.read()))
 '
 }
