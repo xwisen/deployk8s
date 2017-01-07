@@ -11,15 +11,15 @@
 
 
 #usage : ./base.sh 10.78.238.24
-#export http_proxy=http://proxy.zj.chinamobile.com:8080 && export https_proxy=http://proxy.zj.chinamobile.com:8080
-export http_proxy=http://10.78.238.24:8118 && export https_proxy=http://10.78.238.24:8118
+export http_proxy=http://proxy.zj.chinamobile.com:8080 && export https_proxy=http://proxy.zj.chinamobile.com:8080
+#export http_proxy=http://10.78.238.24:8118 && export https_proxy=http://10.78.238.24:8118
 echo "0-------------------set http proxy: \n$http_proxy--------------------\n$https_proxy"
 
 if [[ -n $1 ]];then
 	BASE_HOST=$1
 fi
 
-BASE_HOST=${BASE_HOST:-"10.78.238.24"}
+BASE_HOST=${BASE_HOST:-"10.78.224.240"}
 echo "base host IP is : $BASE_HOST-----------------"
 
 echo "1.-----------rm -rf /etc/yum.repos.d/*"
@@ -30,7 +30,7 @@ if [[ $? -ne 0 ]];then
 fi
 
 echo "2.-----------scp -r $BASE_HOST:/etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo"
-scp -r $BASE_HOST:/etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+scp -o "StrictHostKeyChecking no" -r $BASE_HOST:/etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
 if [[ $? -ne 0 ]];then
 	echo "2.-----------scp -r $BASE_HOST:/etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo return code $?"
 	return 1
