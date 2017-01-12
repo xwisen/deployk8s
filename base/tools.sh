@@ -50,9 +50,9 @@ except urllib2.HTTPError as e:
 tags=json.loads(resp.read())["tags"]
 if tags:
 	for tag in tags:
-		print("'${REG_INFO}'"+"/"+repo+":"+tag)
+		print("'${REG_INFO}'"+"/"+"'${REPO}'"+":"+tag)
 else:
-	print("'${REG_INFO}'"+"/"+repo+":"+"deleted")
+	print("'${REG_INFO}'"+"/"+"'${REPO}'"+":"+"deleted")
 '
 	fi
 }
