@@ -1,0 +1,5 @@
+calico/node:v1.0.0
+calico/cni:v1.5.5
+calico/kube-policy-controller:v0.5.1
+calico/kube-policy-agent:v0.5.1
+calico/ctl:v1.0.0
