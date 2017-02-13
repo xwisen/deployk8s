@@ -36,7 +36,7 @@ data:
       apiVersion: v1
       kind: ipPool
       metadata:
-        cidr: 192.168.0.0/16
+        cidr: 192.168.100.0/24
       spec:
         nat-outgoing: true
 
@@ -259,7 +259,7 @@ spec:
             # The location of the Kubernetes API.  Use the default Kubernetes
             # service for API access.
             - name: K8S_API
-              value: "https://20.26.2.110:14001"
+              value: "http://20.26.2.110:18080"
             # Since we're running in the host namespace and might not have KubeDNS
             # access, configure the container's /etc/hosts to resolve
             # kubernetes.default to the correct service clusterIP.
