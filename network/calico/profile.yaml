@@ -1,0 +1,23 @@
+- apiVersion: v1
+  kind: profile
+  metadata:
+    name: k8s_ns.default
+    tags:
+    - k8s_ns.default
+  spec:
+    egress:
+    - action: allow
+      destination: {}
+      source: {}
+    ingress:
+    - action: allow
+      destination: {}
+      source: {}
+    - action: allow
+      destination: {}
+      source: 
+        net: 20.26.2.0/24
+    - action: allow
+      destination: {}
+      source: 
+        net: 20.26.20.0/24

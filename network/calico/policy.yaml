@@ -1,0 +1,23 @@
+- apiVersion: v1
+  kind: policy
+  metadata:
+    name: k8s-policy-no-match
+  spec:
+    egress:
+    - action: pass
+      destination: {}
+      source: {}
+    ingress:
+    - action: pass
+      destination: {}
+      source: {}
+    - action: allow
+      destination: {}
+      source: 
+        net: 20.26.2.0/24
+    - action: allow
+      destination: {}
+      source: 
+        net: 20.26.20.0/24
+    order: 2000
+    selector: has(calico/k8s_ns)
