@@ -38,6 +38,8 @@ data:
       metadata:
         cidr: 192.168.100.0/24
       spec:
+        ipip:
+          enabled: true
         nat-outgoing: true
 
   # If you're using TLS enabled etcd uncomment the following.
