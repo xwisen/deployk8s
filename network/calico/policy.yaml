@@ -7,15 +7,23 @@
     - action: pass
       destination: {}
       source: {}
+    - action: pass
+      destination: {}
+      source: 
+        net: 20.26.2.0/24
+    - action: pass
+      destination: {}
+      source: 
+        net: 20.26.20.0/24
     ingress:
     - action: pass
       destination: {}
       source: {}
-    - action: allow
+    - action: pass
       destination: {}
       source: 
         net: 20.26.2.0/24
-    - action: allow
+    - action: pass
       destination: {}
       source: 
         net: 20.26.20.0/24
