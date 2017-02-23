@@ -1,0 +1,100 @@
+{
+    "app": {
+        "acceptedResourceRoles": null,
+        "args": null,
+        "backoffFactor": 1.15,
+        "backoffSeconds": 1,
+        "cmd": "catalina.sh run",
+        "constraints": [
+            [
+                "hostname",
+                "LIKE",
+                "20.26.28.220"
+            ]
+        ],
+        "container": {
+            "docker": {
+                "forcePullImage": true,
+                "image": "20.26.2.53:5000/tomcat:7",
+                "network": "USER",
+                "parameters": [
+                    {
+                        "key": "volume-driver",
+                        "value": "volcontiv"
+                    },
+                    {
+                        "key": "volume",
+                        "value": "policy1/v3:/media:rw"
+                    }
+                ],
+                "portMappings": [
+                    {
+                        "containerPort": 8080,
+                        "labels": {},
+                        "name": "tomcat",
+                        "protocol": "tcp",
+                        "servicePort": 18080
+                    }
+                ],
+                "privileged": false
+            },
+            "type": "DOCKER",
+            "volumes": []
+        },
+        "cpus": 1,
+        "dependencies": [],
+        "deployments": [],
+        "disk": 0,
+        "env": {},
+        "executor": "",
+        "fetch": [],
+        "gpus": 0,
+        "healthChecks": [
+            {
+                "command": {
+                    "value": "ls"
+                },
+                "gracePeriodSeconds": 300,
+                "ignoreHttp1xx": false,
+                "intervalSeconds": 60,
+                "maxConsecutiveFailures": 3,
+                "protocol": "COMMAND",
+                "timeoutSeconds": 20
+            }
+        ],
+        "id": "/calico-volcontiv/net100-254-v3",
+        "instances": 0,
+        "ipAddress": {
+            "discovery": {
+                "ports": []
+            },
+            "groups": [],
+            "labels": {},
+            "networkName": "net100"
+        },
+        "labels": {},
+        "maxLaunchDelaySeconds": 3600,
+        "mem": 1024,
+        "readinessChecks": [],
+        "residency": null,
+        "secrets": {},
+        "storeUrls": [],
+        "taskKillGracePeriodSeconds": null,
+        "tasks": [],
+        "tasksHealthy": 0,
+        "tasksRunning": 0,
+        "tasksStaged": 0,
+        "tasksUnhealthy": 0,
+        "upgradeStrategy": {
+            "maximumOverCapacity": 1,
+            "minimumHealthCapacity": 0
+        },
+        "uris": [],
+        "user": null,
+        "version": "2017-02-21T07:37:47.851Z",
+        "versionInfo": {
+            "lastConfigChangeAt": "2017-02-03T03:39:16.453Z",
+            "lastScalingAt": "2017-02-21T07:37:47.851Z"
+        }
+    }
+}
