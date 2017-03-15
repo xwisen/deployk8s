@@ -1,5 +1,13 @@
 # 注意事项
-# master 节点部署(做高可用必须保证master节点为2个及其以上，推荐3个节点)
+**做高可用必须保证master节点为2个及其以上，推荐3个节点**<br>
+**文档分为四个部分**<br>
+<!-- THE CONTENT ... -->
+1. [master 节点部署](#master节点部署)
+2. [agent节点部署](#agent节点部署)
+3. [增强插件部署](#增强插件部署)
+4. [网络方案部署](#网络方案部署)
+
+# master节点部署
 1. 去github上下载适合自己环境的安装包，地址:[kubernetes release](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md),一般需要下载server包即可
 2. 解压文件后,使用docker load 命令把tar包load成可用镜像(如有需要打上自己想要的tag)。示例: `docker load -i kube-apiserver.tar`
 3. 下载etcd镜像(推荐使用v3),(如有需要打上自己想要的tag)。示例: `docker pull quay.io/coreos/etcd:v3.0.17`
@@ -79,7 +87,8 @@
 	* [haproxy](/base/haka/haproxy/Dockerfile) 和 [keepalived](/base/haka/keepalived/Dockerfile) 镜像制作请参考其Dockerfile,基础镜像根据后缀可在hub上找到。
 	* 修改好之后将yaml文件拷贝到kubelet配置`--config=/data/kubernetes/manifests`所在目录下
 
-# agent 节点部署
+# agent节点部署
 
 # 增强插件部署
+
 # 网络方案部署
