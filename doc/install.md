@@ -5,6 +5,7 @@
 3. 下载etcd镜像(推荐使用v3),(如有需要打上自己想要的tag)。示例: `docker pull quay.io/coreos/etcd:v3.0.17`
 4. 确保docker/kubelet服务正常，centos7.2 systemd service文件可参考/base目录下service文件
 5. 部署etcd集群: 在每个master节点上启动etcd服务，并配置为集群模式。[etcd.yaml](/base/master/etcd.yaml)需要修改字段如下:
+
 	---
 	   image:[自己镜像名字]
 	   env:[所有字段]
@@ -19,6 +20,7 @@
 	* 修改好之后将yaml文件拷贝到kubelet配置`--config=/data/kubernetes/manifests`所在目录下
 	* 部署完之后使用`etcdctl member list` 命令确认etcd集群是否就绪。
 6. 部署kube-apiserver: 在每个master节点上部署kube-apiserver服务。[kube-apiserver.yaml](/base/master/kube-apiserver.yaml)需要修改字段如下:
+
 	---
 	   image:[自己镜像名字]
 	   volume:
@@ -28,6 +30,7 @@
 	---
 	* 修改好之后将yaml文件拷贝到kubelet配置`--config=/data/kubernetes/manifests`所在目录下
 7. 部署kube-controller-manager: 在每个master节点上部署kube-controller-manager服务。[kube-controller-manager.yaml](/base/master/kube-controller-manager.yaml)需要修改字段如下:
+
 	---
 	   image:[自己镜像名字]
 	   volume:
@@ -37,6 +40,7 @@
 	---
 	* 修改好之后将yaml文件拷贝到kubelet配置`--config=/data/kubernetes/manifests`所在目录下
 8. 部署kube-scheduler: 在每个master节点上部署kube-scheduler服务。[kube-scheduler.yaml](/base/master/kube-scheduler.yaml)需要修改字段如下:
+
 	---
 	   image:[自己镜像名字]
 	   volume:
@@ -55,8 +59,9 @@
 	sysctl -w net.ipv4.ip_forward=1
 	sysctl -w net.ipv4.ip_nonlocal_bind=1
 ```
-* keepalived 配置文件每个都不一样.示例: [主](/base/haka/keepalived/keepalived.conf.master)[备1](/base/haka/keepalived/keepalived.conf.backup1)[备2](/base/haka/keepalived/keepalived.conf.backup2)
-[haproxy-keepalived.yaml](/base/haka/haproxy-keepalived.yaml)需要修改字段如下:
+* keepalived 配置文件每个节点都不一样.示例: [主](/base/haka/keepalived/keepalived.conf.master)--[备1](/base/haka/keepalived/keepalived.conf.backup1)--[备2](/base/haka/keepalived/keepalived.conf.backup2)
+* [haproxy-keepalived.yaml](/base/haka/haproxy-keepalived.yaml)需要修改字段如下:
+
 	---
 	   image:[自己镜像名字,haproxy 和 keepalived都需要修改]
 	   volumes:
