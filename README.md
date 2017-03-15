@@ -1,8 +1,8 @@
 # deployk8s
-> - 有问题请上[dockone.io](http://dockone.io/people/xwisen)找我
-> - 本人从事容器编排方面工作，本项目算是一些小笔记。内容包括热门的kubernetes、mesos编排工具及其周边的网络、存储、监控等方案(ps: 仅供参考，示例`yaml`文件优先).
+> - 有问题可以去[dockone.io](http://dockone.io/people/xwisen)提问，也可以直接提issue
+> - 本人从事容器编排方面工作，本项目算是一些小笔记。内容包括热门的kubernetes、mesos编排工具及其周边的网络、存储、监控等方案(ps: 仅供参考，对刚入门的小伙伴来说难度可能稍大。示例`yaml`文件优先).
 ## 部署说明文档
-> [正在写---](/doc/install.md)
+> [请看这里---](/doc/install.md)
 ## 目录结构说明
 > #####Attentions: 
 * 版本说明: 操作系统为centos 7.2,docker 版本为1.10+(目前1.12.6)，kubernetes原本为1.4.6，后kubernetes核心组件升级到1.5.1,但是插件没有更新。
@@ -16,7 +16,7 @@
   - [x] [/haconfd](/addons/haconfd) `haproxy + confd 用来做应用外部访问，原理类似ingress，目前只能通过static pod方式部署，路由规则模板需要手工配置`
   - [ ] [/ingress](/addons/ingress) `kubernetes 中应用外部访问的另一种方式，具体请参考官方文档`
   - [x] [/prometheus](/addons/prometheus) `prometheus 是一个流行的监控告警工具，与kubernetes同属CNCF基金会`
-- [x] [/base](/base) `base 目录包含kubernetes及其高可用方案核心组件，搭建集群青葱这里开始`
+- [x] [/base](/base) `base 目录包含kubernetes及其高可用方案核心组件`
   - [x] [/agent](/base/agent) `kubernetes agent节点服务,包含kubelet(systemd service)和kube-proxy(static pod)`
   - [x] [/haka](/base/haka) `haproxy + keepalived(systemd service) kube-apiserver高可用关键组件`
   - [x] [/master](/base/master) `kubernetes master 节点服务,包含kubelet(systemd service)和etcd/kube-apiserver/kube-controller-manager/kube-scheduler(static pod)`
