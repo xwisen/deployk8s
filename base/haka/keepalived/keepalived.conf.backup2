@@ -1,15 +1,15 @@
  vrrp_script chk_haproxy {
         script "/etc/keepalived/health.sh"    #服务探测，返回0说明服务是正常的
         interval 1    #每隔1秒探测一次
-        weight 2      #haproxy上线，权重加2；下线，权重减2
+        weight 2      #haproxy权重
 }
 #
-vrrp_instance VI_1 {        #双主实例1
-    state BACKUP            #ha1（172.16.7.10）为主，ha2（172.16.7.100）为备
-    interface ens32
-    virtual_router_id 100    #实例1的VRID为88
+vrrp_instance VI_1 {
+    state BACKUP
+    interface ens32	#使用的网卡名称
+    virtual_router_id 100    #虚拟路由id，处于同一keepalived必须保证一致
     garp_master_delay 1
-    priority 98            #主（172.16.7.10）的优先级为100，从的（172.16.7.100）优先级为99
+    priority 98	#优先级，越大越优先
     advert_int 1
     authentication {
         auth_type PASS
@@ -17,7 +17,7 @@ vrrp_instance VI_1 {        #双主实例1
     }
 #
     virtual_ipaddress {
-        20.26.2.110/24 dev ens32    #实例1的VIP
+        20.26.2.110/24 dev ens32
     }
     track_interface {
         ens32
