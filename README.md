@@ -31,6 +31,5 @@
   - [x] [/flannel](/network/flannel) `flannel网络方案，部署方式为static pod(部署成功后请使用restart_docker.sh脚本重启docker)(ps: 正考虑用daemonset部署)`
 - [ ] [/storage](/storage) `kubernetes中可选的容器存储方案`
   - [x] [/rbd](/storage/rbd) `kubernetes 与ceph rbd对接示例文件(ps: yaml文件优先)`
-- [ ] [/base.sh](/base.sh)
 ## 生产高可用kubernetes组件架构图
 ![Architecture](images/Architecture.png)
