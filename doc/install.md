@@ -18,37 +18,59 @@
     gcr.io/google_containers/kube-proxy:d9f201c130ce77ce273f486e147f0ee1-v1.6.1
     kubectl/kubelet
 ```
-  * 其他镜像(二进制文件)
+  * 其他镜像(二进制文件)
 ```shell  
   docker pull quay.io/coreos/etcd:v3.0.17 && docker tag quay.io/coreos/etcd:v3.0.17 gcr.io/coreos/etcd:v3.0.17
   docker pull gcr.io/google_containers/pause:3.0
 ```
   * 插件镜像(二进制文件)
   * 网络组件镜像(二进制文件)
-2. 日志目录/文件创建
+2. 日志目录/文件创建/hosts设置
 ```shell
-pssh -i -t 1200 -h /etc/nhosts mkdir -vp /data/logs/base
+pssh -i -t 1200 -h /etc/nhosts mkdir -vp /data/logs/base /data/kubernetes/manifests /data/logs/app /data/etcd/data
 pssh -i -t 1200 -h /etc/nhosts touch /data/logs/base/{etcd.log,kube-apiserver.log,kube-controller-manager.log,kube-scheduler.log,kube-proxy.log,flannel.log}
+pscp.pssh -r -h /etc/nhosts /etc/hosts /etc/hosts
 ```
 3. 确保所有节点[docker](/base/docker.service)服务正常运行
 
 # master节点部署
-1. 确保docker/kubelet服务正常，centos7.2 systemd service文件可参考[master kubelet.service](/base/master/kubelet.service)
-2. 部署etcd集群: 在每个master节点上启动etcd服务，并配置为集群模式。[etcd.yaml](/base/master/etcd.yaml)需要修改字段如下:
+1. 运行kubelet服务。centos7.2 systemd service文件可参考[master kubelet.service](/base/master/kubelet.service)
+> [kubelet.service](/base/master/kubelet.service)需要修改:
 
-	---
-	   image:[自己镜像名字]
-	   env:[所有字段]
-	   volume:
-	     - hostPath:
-      	        path: /data/etcd/data
-    	        name: varetcd
-	     - hostPath:
-      	        path: /data/logs/base/etcd.log [需要事先在宿主机上创建好]
-    	        name: logfile
-	---
-	* 修改好之后将yaml文件拷贝到kubelet配置`--config=/data/kubernetes/manifests`所在目录下
-	* 部署完之后使用`etcdctl member list` 命令确认etcd集群是否就绪。
+```
+/usr/local/bin/kubelet //二进制路径
+--pod-infra-container-image= //自己的基础镜像
+```
+<!--
+pscp.pssh -r -h /etc/nhosts ./kubelet /usr/local/bin/
+pscp.pssh -r -h /etc/nhosts ./kubelet.service /usr/lib/systemd/system/
+pssh -i -h /etc/nhosts "systemctl daemon-reload && systemctl enable kubelet && systemctl start kubelet"
+-->
+> **再次确保docker/kubelet服务处于running状态，下面开始安装etcd以及kubernetes master服务组件**<br>
+2. 部署etcd集群: 在每个master节点上启动etcd服务，并配置为集群模式。[etcd.yaml](/base/master/etcd.yaml)需要修改字段如下:
+```yaml
+image: gcr.io/coreos/etcd:v3.0.17//自己镜像名字
+env:
+- name: NAME
+  value: master3 //本etcd名字
+- name: ADDR
+  value: 20.26.28.85//本etcd ip
+- name: MASTER1
+  value: 20.26.28.83//etcd1 ip
+- name: MASTER2
+  value: 20.26.28.84//etcd2 ip
+- name: MASTER3
+  value: 20.26.28.85//etcd3 ip
+volume:
+- hostPath:
+  path: /data/etcd/data //etcd数据
+  name: varetcd
+- hostPath:
+  path: /data/logs/base/etcd.log //日志外挂路径，需确认宿主机是否存在该文件
+  name: logfile
+```
+    * 修改好之后将yaml文件拷贝到kubelet配置`--pod-manifest-path=/data/kubernetes/manifests`所在目录下
+    * 部署完之后使用`etcdctl member list` 命令确认etcd集群是否就绪。
 3. 部署kube-apiserver: 在每个master节点上部署kube-apiserver服务。[kube-apiserver.yaml](/base/master/kube-apiserver.yaml)需要修改字段如下:
 
 	---
@@ -58,7 +80,7 @@ pssh -i -t 1200 -h /etc/nhosts touch /data/logs/base/{etcd.log,kube-apiserver.lo
       	      path: /data/logs/base/kube-apiserver.log [需要事先在宿主机上创建好]
     	      name: logfile
 	---
-	* 修改好之后将yaml文件拷贝到kubelet配置`--config=/data/kubernetes/manifests`所在目录下
+	* 修改好之后将yaml文件拷贝到kubelet配置`--pod-manifest-path=/data/kubernetes/manifests`所在目录下
 4. 部署kube-controller-manager: 在每个master节点上部署kube-controller-manager服务。[kube-controller-manager.yaml](/base/master/kube-controller-manager.yaml)需要修改字段如下:
 
 	---
@@ -68,7 +90,7 @@ pssh -i -t 1200 -h /etc/nhosts touch /data/logs/base/{etcd.log,kube-apiserver.lo
       	      path: /data/logs/base/kube-controller-manager.log [需要事先在宿主机上创建好]
     	      name: logfile
 	---
-	* 修改好之后将yaml文件拷贝到kubelet配置`--config=/data/kubernetes/manifests`所在目录下
+	* 修改好之后将yaml文件拷贝到kubelet配置`--pod-manifest-path=/data/kubernetes/manifests`所在目录下
 5. 部署kube-scheduler: 在每个master节点上部署kube-scheduler服务。[kube-scheduler.yaml](/base/master/kube-scheduler.yaml)需要修改字段如下:
 
 	---
@@ -78,7 +100,7 @@ pssh -i -t 1200 -h /etc/nhosts touch /data/logs/base/{etcd.log,kube-apiserver.lo
       	      path: /data/logs/base/kube-scheduler.log [需要事先在宿主机上创建好]
     	      name: logfile
 	---
-	* 修改好之后将yaml文件拷贝到kubelet配置`--config=/data/kubernetes/manifests`所在目录下
+	* 修改好之后将yaml文件拷贝到kubelet配置`--pod-manifest-path=/data/kubernetes/manifests`所在目录下
 6. 部署haproxy + keepalived: 在每个master节点上部署haproxy + keepalived服务。
 * keepalived 部分功能需要内核支持:
 ```
