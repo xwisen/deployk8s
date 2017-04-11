@@ -2,7 +2,16 @@
 > - 有问题可以去[dockone.io](http://dockone.io/people/xwisen)提问，也可以直接提issue
 > - 本人从事容器编排方面工作，本项目算是一些小笔记。内容包括热门的kubernetes、mesos编排工具及其周边的网络、存储、监控等方案(ps: 仅供参考，对刚入门的小伙伴来说难度可能稍大。示例`yaml`文件优先).
 ## 部署说明文档
-> [请看这里---](/doc/install.md)
+# 注意事项
+**做高可用必须保证master节点为2个及其以上，推荐3个节点**<br>
+**文档分为六个部分**<br>
+<!-- THE CONTENT ... -->
+1. [基础镜像和环境准备](/doc/base_env.md)
+2. [master 节点部署](/doc/k8s_master_moudle.md)
+3. [使用haproxy负载减轻单个kube-apiserver压力，并使用keepalived保证高可用](/doc/haproxy_keepalived.md)
+4. [agent节点部署](/doc/agent_moudle.md)
+5. [增强插件部署](/doc/plugins_install.md)
+6. [网络方案部署](/doc/network_install.md)
 ## 目录结构说明
 > #####Attentions: 
 * 版本说明: 操作系统为centos 7.2,docker 版本为1.10+(目前1.12.6)，kubernetes原本为1.4.6，后kubernetes核心组件升级到1.5.1,但是插件没有更新。
