@@ -12,6 +12,7 @@ spec:
   containers:
   - name: kube-scheduler
     image: reg.dnt:5000/google_containers/kube-scheduler:v1.4.0
+    image: gcr.io/google_containers/kube-scheduler:67021c49b24e106a323b398aa7ee95a2-v1.6.1
     command:
     - /bin/sh
     - -c

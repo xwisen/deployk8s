@@ -11,7 +11,7 @@ spec:
   hostNetwork: true
   containers:
   - name: kube-apiserver
-    image: reg.dnt:5000/google_containers/kube-apiserver:v1.4.0
+    image: gcr.io/google_containers/kube-apiserver:6987e76bea391a234a856fbdac637d66-v1.6.1
     command:
     - /bin/sh
     - -c

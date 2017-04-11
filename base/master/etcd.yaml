@@ -10,7 +10,7 @@ metadata:
 spec:
   hostNetwork: true
   containers:
-  - image: reg.dnt:5000/coreos/etcd:v3.0.10
+  - image: gcr.io/coreos/etcd:v3.0.17
     name: etcd-container
     command:
     - /bin/sh
@@ -31,15 +31,15 @@ spec:
       timeoutSeconds: 30
     env:
     - name: NAME
-      value: master1
+      value: master3
     - name: ADDR
-      value: 10.78.238.24
+      value: 20.26.28.85
     - name: MASTER1
-      value: 10.78.238.24
+      value: 20.26.28.83
     - name: MASTER2
-      value: 10.78.238.25
+      value: 20.26.28.84
     - name: MASTER3
-      value: 10.78.198.69
+      value: 20.26.28.85
     volumeMounts:
     - mountPath: /var/etcd
       name: varetcd
